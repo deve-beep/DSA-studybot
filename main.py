@@ -462,7 +462,7 @@ def main():
         num = st.selectbox("Number of Questions", [5, 10, 15, 20])
         level = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
 
-       if st.button("Generate Quiz"):
+    if st.button("Generate Quiz"):
     prompt = f"""
     Generate {num} multiple choice DSA questions on the topic '{topic}' with {level} difficulty.
     Each question should be in the following JSON format:
