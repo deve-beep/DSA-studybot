@@ -463,18 +463,18 @@ def main():
         level = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
 
     if st.button("Generate Quiz"):
-    prompt = f"""
-    Generate {num} multiple choice DSA questions on the topic '{topic}' with {level} difficulty.
-    Each question should be in the following JSON format:
-    {{
+      prompt = f"""
+      Generate {num} multiple choice DSA questions on the topic '{topic}' with {level} difficulty.
+      Each question should be in the following JSON format:
+      {{
         "question": "Your question?",
         "options": ["A", "B", "C", "D"],
         "answer": "Correct option from above",
         "hint": "Give a hint to solve the question",
         "explanation": "Explain why the answer is correct"
-    }}
-    Output only valid JSON array.
-    """
+      }}
+      Output only valid JSON array.
+      """
 
     try:
         response = client.chat.completions.create(
