@@ -18,6 +18,7 @@ import time
 
 # Use secrets for security
 genai.configure(api_key="AIzaSyAXRP7bbH7ofQcfdQOoO0FTdN2lyzK6TKE")
+GROQ_API_KEY = "5tsmddws9xxpct7yhuiucy.streamlit.app/"
 
 # Folders
 os.makedirs("data", exist_ok=True)
