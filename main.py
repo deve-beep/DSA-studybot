@@ -454,61 +454,100 @@ def main():
 
     st.sidebar.write(f"👤 Logged in as: {st.session_state.username}")
     st.sidebar.write(f"📧 Email: {st.session_state.email}")
-    menu = ["Take Quiz", "Track Progress", "📅 Smart Study Scheduler", "🤖 Ask DSA Doubt", "🔒 Logout"]
+
+    menu = [
+        "Take Quiz",
+        "Track Progress",
+        "📅 Smart Study Scheduler",
+        "🤖 Ask DSA Doubt",
+        "🔒 Logout"
+    ]
+
     choice = st.sidebar.radio("Select", menu)
 
     if choice == "Take Quiz":
-        topic = st.selectbox("Choose a DSA Topic", ["Array", "Linked List", "Stack", "Queue", "Tree", "Graph", "DP","REDOX REACTIONS","VECTORS MATHS JEE MAIN"])
-        num = st.selectbox("Number of Questions", [5, 10, 15, 20])
-        level = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
 
-    if st.button("Generate Quiz"):
-      prompt = f"""
-      Generate {num} multiple choice DSA questions on the topic '{topic}' with {level} difficulty.
-      Each question should be in the following JSON format:
-      {{
-        "question": "Your question?",
-        "options": ["A", "B", "C", "D"],
-        "answer": "Correct option from above",
-        "hint": "Give a hint to solve the question",
-        "explanation": "Explain why the answer is correct"
-      }}
-      Output only valid JSON array.
-      """
-
-    try:
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "user", "content": prompt}
+        topic = st.selectbox(
+            "Choose a DSA Topic",
+            [
+                "Array",
+                "Linked List",
+                "Stack",
+                "Queue",
+                "Tree",
+                "Graph",
+                "DP",
+                "REDOX REACTIONS",
+                "VECTORS MATHS JEE MAIN"
             ]
         )
 
-        questions = extract_json(
-            response.choices[0].message.content
-        )
+        num = st.selectbox("Number of Questions", [5, 10, 15, 20])
+        level = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
 
-        st.session_state.shuffled_questions = questions
-        quiz_interface(topic, questions)
+        if st.button("Generate Quiz"):
 
-    except Exception as e:
-        st.error(f"❌ Failed to generate questions: {e}")
+            prompt = f"""
+            Generate {num} multiple choice DSA questions on the topic '{topic}' with {level} difficulty.
 
-elif 'shuffled_questions' in st.session_state:
-    quiz_interface(topic, st.session_state.shuffled_questions)
+            Each question should be in the following JSON format:
+
+            {{
+                "question": "Your question?",
+                "options": ["A", "B", "C", "D"],
+                "answer": "Correct option from above",
+                "hint": "Give a hint to solve the question",
+                "explanation": "Explain why the answer is correct"
+            }}
+
+            Output only valid JSON array.
+            """
+
+            try:
+                response = client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ]
+                )
+
+                questions = extract_json(
+                    response.choices[0].message.content
+                )
+
+                st.session_state.shuffled_questions = questions
+
+                quiz_interface(topic, questions)
+
+            except Exception as e:
+                st.error(f"❌ Failed to generate questions: {e}")
+
+        elif 'shuffled_questions' in st.session_state:
+            quiz_interface(
+                topic,
+                st.session_state.shuffled_questions
+            )
 
     elif choice == "Track Progress":
         show_progress()
+
     elif choice == "📅 Smart Study Scheduler":
         show_scheduler()
+
     elif choice == "🤖 Ask DSA Doubt":
         show_chatbot()
+
     elif choice == "🔒 Logout":
         st.session_state.logged_in = False
         st.session_state.username = ""
         st.session_state.email = ""
+
         st.success("Logged out successfully.")
         st.rerun()
+
 
 if __name__ == "__main__":
     main()
