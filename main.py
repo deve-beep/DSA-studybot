@@ -18,7 +18,7 @@ import time
 
 # Use secrets for security
 
-client = Groq(api_key=st.secrets["AIzaSyAXRP7bbH7ofQcfdQOoO0FTdN2lyzK6TKE"])
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 GROQ_API_KEY = "5tsmddws9xxpct7yhuiucy.streamlit.app/"
 
 # Folders
