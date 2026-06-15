@@ -414,7 +414,8 @@ def show_scheduler():
                     save_schedule(schedule)
 
 def show_chatbot():
-    st.subheader("🤖 DSA Doubt-Resolving Chatbot (Gemini)")
+    st.subheader("🤖 DSA Doubt-Resolving Chatbot")
+
     user_question = st.text_area("💬 Ask your DSA doubt")
 
     if st.button("Ask Chatbot"):
@@ -423,19 +424,18 @@ def show_chatbot():
             return
 
         try:
-         response = client.chat.completions.create(
-         model="llama-3.3-70b-versatile",
-          messages=[
-        {"role": "user", "content": user_question}
-    ]
-)
+            response = client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {"role": "user", "content": user_question}
+                ]
+            )
 
-       st.markdown(response.choices[0].message.content)
-           
             st.success("✅ Here's the explanation:")
-           
+            st.markdown(response.choices[0].message.content)
+
         except Exception as e:
-            st.error(f"❌ Gemini API Error: {e}")
+            st.error(f"❌ AI Error: {e}")
 
 def main():
     st.set_page_config(page_title="DSA StudyBot", page_icon="🤖", layout="wide")
