@@ -3,7 +3,7 @@ import streamlit as st
 import json
 import random
 import smtplib
-import google.generativeai as genai
+from groq import Groq
 from email.message import EmailMessage
 import os
 import hashlib
@@ -17,7 +17,8 @@ from datetime import timedelta
 import time
 
 # Use secrets for security
-genai.configure(api_key="AIzaSyAXRP7bbH7ofQcfdQOoO0FTdN2lyzK6TKE")
+
+client = Groq(api_key=st.secrets["AIzaSyAXRP7bbH7ofQcfdQOoO0FTdN2lyzK6TKE"])
 GROQ_API_KEY = "5tsmddws9xxpct7yhuiucy.streamlit.app/"
 
 # Folders
@@ -422,10 +423,17 @@ def show_chatbot():
             return
 
         try:
-            model = genai.GenerativeModel(model_name="gemini-2.0-flash")
-            response = model.generate_content(user_question)
+         response = client.chat.completions.create(
+         model="llama-3.3-70b-versatile",
+          messages=[
+        {"role": "user", "content": user_question}
+    ]
+)
+
+       st.markdown(response.choices[0].message.content)
+           
             st.success("✅ Here's the explanation:")
-            st.markdown(response.text)
+           
         except Exception as e:
             st.error(f"❌ Gemini API Error: {e}")
 
@@ -469,9 +477,16 @@ def main():
             """
 
             try:
-                model = genai.GenerativeModel(model_name="gemini-2.0-flash")
-                response = model.generate_content(prompt)
-                questions = extract_json(response.text)
+              response = client.chat.completions.create(
+              model="llama-3.3-70b-versatile",
+              messages=[
+        {"role": "user", "content": prompt}
+    ]
+)
+
+      questions = extract_json(
+    response.choices[0].message.content
+)
                 st.session_state.shuffled_questions = questions
                 quiz_interface(topic, questions)
             except Exception as e:
