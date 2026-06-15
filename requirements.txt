@@ -1,2 +1,7 @@
 streamlit
 google-generativeai
+matplotlib
+numpy
+pandas
+scikit-learn
+plotly
