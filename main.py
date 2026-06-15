@@ -476,21 +476,23 @@ def main():
             Output only valid JSON array.
             """
 
-            try:
-              response = client.chat.completions.create(
-              model="llama-3.3-70b-versatile",
-              messages=[
-        {"role": "user", "content": prompt}
-    ]
-)
+           try:
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
 
-      questions = extract_json(
-    response.choices[0].message.content
-)
-                st.session_state.shuffled_questions = questions
-                quiz_interface(topic, questions)
-            except Exception as e:
-                st.error(f"❌ Failed to generate questions: {e}")
+    questions = extract_json(
+        response.choices[0].message.content
+    )
+
+    st.session_state.shuffled_questions = questions
+    quiz_interface(topic, questions)
+
+except Exception as e:
+    st.error(f"❌ Failed to generate questions: {e}")
 
         elif 'shuffled_questions' in st.session_state:
             quiz_interface(topic, st.session_state.shuffled_questions)
